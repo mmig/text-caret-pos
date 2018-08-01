@@ -3,7 +3,7 @@
   "repository": "component/textarea-caret-position",
   "version": "3.0.2",
   "author": "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)",
-  "description": "latest version of component/textarea-caret-position",
+  "description": "UMD version of component/textarea-caret-position",
   "files": [
     "index.js"
   ],
@@ -12,5 +12,13 @@
     "textarea",
     "caret",
     "position"
-  ]
+  ],
+  "scripts": {
+    "lib_caret": "uglifyjs index.js --compress --mangle -b \"beautify=false,preamble='var define;'\" --source-map \"filename='caretPosition.min.map',base='dist'\" -o dist/caretPosition.min.js",
+    "rn_lib_caret": "node -e require('fs').renameSync('dist/caretPosition.min.js.map','dist/caretPosition.min.map')",
+    "dist": "npm run lib_caret & npm run rn_lib_caret"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.1.6"
+  }
 }

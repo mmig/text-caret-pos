@@ -15,7 +15,7 @@ faithfully reproduce the wrapping in the faux `div`. The same is done for the
 ## Demo
 
 Check out the [JSFiddle](http://jsfiddle.net/dandv/aFPA7/)
-or the [test.html](http://rawgit.com/component/textarea-caret-position/master/test/index.html).
+or the [test.html](http://rawgit.com/mmig/textarea-caret-position/master/test/index.html).
 
 ## Features
 
@@ -35,8 +35,9 @@ or the [test.html](http://rawgit.com/component/textarea-caret-position/master/te
 
 ## API
 
+Usage Example:
 ```js
-var getCaretCoordinates = require('textarea-caret');
+var textareaCaret = require('textarea-caret');
 
 document.querySelector('textarea').addEventListener('input', function () {
   var coordinates = getCaretCoordinates(this, this.selectionEnd);
@@ -45,7 +46,69 @@ document.querySelector('textarea').addEventListener('input', function () {
 })
 ```
 
-### var coordinates = getCaretCoordinates(element, position)
+
+> `createDiv(options) : void`
+> 	create faux DIV
+> 		- options (Options): [OPTIONAL] additional options (see below)
+>
+> `measureFontZoom() : number`
+> 	calculate a "font zoom": zoom that is applied "by the environment" and not set by the CSS/HTML itself
+> 	(e.g. some Android variants allow setting a font zoom in the system settings).  
+> 	If not "font zoom" is detected, returns `1` by default (i.e. no scaling).
+>
+> `styleDiv(element, position, div, options) : void`
+> 	apply styling of the target-element to the faux-DIV for accurately calculating the coordinates
+> 		- element (HTMLElement): the target element (textarea or input)
+> 		- position (number): the character/text index, i.e. position for which the coordinates should be calculated
+> 		- div (HTMLElement): the faux DIV for calculating the coordinates
+> 		- options (Options): [OPTIONAL] additional options (see below)
+>
+> `resetStyleDiv() : void`
+> 	reset styling for faux DIV, i.e. force re-styling for next calculation (only relevant if DIV is reused)
+>
+> `resetDiv(options) : void`
+> 	reset/remove faux DIV, if reuse or debug was enabled  
+> 	NOTE if faux DIV was created with custom `options.id`,
+> 			 then the options-argument must contain the same `id`
+> 			 (otherwise this call will have not effect)
+> 		- options (Options): [OPTIONAL] additional options (see below)
+>
+> `updateCoordinates(element, position, div, options) : {top: number, left: number}`
+> 	recalulate the coordinates (e.g. due to changed text) without re-styling the faux DIV
+> 		- element (HTMLElement): the target element (textarea or input)
+> 		- position (number): the character/text index, i.e. position for which the coordinates should be calculated
+> 		- div (HTMLElement): the faux DIV for calculating the coordinates
+> 		- options (Options): [OPTIONAL] additional options (see below)
+>
+> `getCoordinates(element, position, options) : {top: number, left: number}`
+> 	get coordinates in the target `element` for the text `position` (i.e. index in string)
+> 		- element (HTMLElement): the target element (textarea or input)
+> 		- position (number): the character/text index, i.e. position for which the coordinates should be calculated
+> 		- options (Options): [OPTIONAL] additional options (see below)
+>
+> `Options`:
+> 	optional settings for calculating the coordinates
+> 		- options for calculating the caret coordinates:
+> 		- options.debug	BOOLEAN: show shadow DIV that is used for calculating the caret coordinates; this will also include the created DIV in the coordinates-object in property `_div` (DEFAULT: false)
+> 		- options.reuse	BOOLEAN: reuse shadow DIV that is used for calculating the caret coordinates (DEFAULT: false)
+> 		- options.returnDiv	BOOLEAN: if reuse was enabled, returns the shadow DIV in the coordinates-object in property `_div` (DEFAULT: false)
+> 		- options.id		STRING: the id attribute for the shadow DIV (DEFAULT: "input-textarea-caret-position-mirror-div")
+> 		- options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.
+> 		- 												If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it shoud get updated): callback(shadowDiv) : BOOLEAN
+> 		- 												NOTE this option is only relevant, if "reuse" is TRUE.  
+> 		- 												(DEFAULT: false)
+> 		- options.forceUpdateStyle	BOOLEAN: force updating the style of the shadow DIV; only relevant, if "reuse" is TRUE (DEFAULT: false)
+> 		- options.forceClearFauxStyle	BOOLEAN: force faux span to use "cleared" style (e.g. in case SPAN is globally styled) (DEFAULT: false)
+> 		- options.fauxId				STRING: use ID for faux span (e.g. for styling faux span) (DEFAULT: undefined)
+> 		- options.fontZoom			NUMBER: apply zoom factor to font-size (DEFAULT: undefined)
+>
+> 		- options.text: STRING  the text value that should be used for the calculation (NOTE: this field takes precedence over container & fieldName)
+> 		- options.container: OBJECT  if container is given, the current text will be retrieved from container[fieldName], instead of using element.value
+> 		- options.fieldName: STRING  the field-name in container, to use as the text value (NOTE: container must also be specified)
+>
+
+
+### var coordinates = getCoordinates(element, position)
 
 `position` is an integer indicating the location of the caret. You basically pass `this.selectionStart` or `this.selectionEnd`. This way, this library isn't opinionated about what the caret is.
 
