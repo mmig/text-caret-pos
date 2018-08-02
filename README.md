@@ -12,9 +12,14 @@ of the span is set to the remainder of the text in the textarea, in order to
 faithfully reproduce the wrapping in the faux `div`. The same is done for the
 `input` to simplify the code, though it makes no difference.
 
+**NOTE**: This fork of [textarea-caret-position](http://rawgit.com/component/textarea-caret-position/)
+          wraps the functionality in an module (UMD) which exposes some
+					more (helper) functions and adds some options (see API description below).
+
+
 ## Demo
 
-Check out the [JSFiddle](http://jsfiddle.net/dandv/aFPA7/)
+Check out the ~~[JSFiddle](http://jsfiddle.net/dandv/aFPA7/)~~ _(original library)_
 or the [test.html](http://rawgit.com/mmig/textarea-caret-position/master/test/index.html).
 
 ## Features
@@ -37,10 +42,10 @@ or the [test.html](http://rawgit.com/mmig/textarea-caret-position/master/test/in
 
 Usage Example:
 ```js
-var textareaCaret = require('textarea-caret');
+var caretPosition = require('textarea-caret');
 
 document.querySelector('textarea').addEventListener('input', function () {
-  var coordinates = getCaretCoordinates(this, this.selectionEnd);
+  var coordinates = caretPosition.getCoordinates(this, this.selectionEnd);
   console.log(coordinates.top);
   console.log(coordinates.left);
 })
@@ -94,17 +99,19 @@ document.querySelector('textarea').addEventListener('input', function () {
 > 		- options.returnDiv	BOOLEAN: if reuse was enabled, returns the shadow DIV in the coordinates-object in property `_div` (DEFAULT: false)
 > 		- options.id		STRING: the id attribute for the shadow DIV (DEFAULT: "input-textarea-caret-position-mirror-div")
 > 		- options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.
-> 		- 												If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it shoud get updated): callback(shadowDiv) : BOOLEAN
-> 		- 												NOTE this option is only relevant, if "reuse" is TRUE.  
-> 		- 												(DEFAULT: false)
+> 															If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it should get updated): `callback(shadowDiv) : boolean`
+> 															NOTE this option is only relevant, if "reuse" is TRUE.  
+> 															(DEFAULT: false)
 > 		- options.forceUpdateStyle	BOOLEAN: force updating the style of the shadow DIV; only relevant, if "reuse" is TRUE (DEFAULT: false)
 > 		- options.forceClearFauxStyle	BOOLEAN: force faux span to use "cleared" style (e.g. in case SPAN is globally styled) (DEFAULT: false)
 > 		- options.fauxId				STRING: use ID for faux span (e.g. for styling faux span) (DEFAULT: undefined)
-> 		- options.fontZoom			NUMBER: apply zoom factor to font-size (DEFAULT: undefined)
+> 		- options.fontZoom			NUMBER | BOOLEAN: apply zoom factor to font-size.
+> 															 If `true` (boolean) the zoom factor will be calculated using `measureFontZoom()`, and the option-value
+> 															 (`true`) will be replaced with the measured zoom factor.
+> 															 (DEFAULT: undefined)
 >
-> 		- options.text: STRING  the text value that should be used for the calculation (NOTE: this field takes precedence over container & fieldName)
-> 		- options.container: OBJECT  if container is given, the current text will be retrieved from container[fieldName], instead of using element.value
-> 		- options.fieldName: STRING  the field-name in container, to use as the text value (NOTE: container must also be specified)
+> 		- options.text STRING | FUNCTION: the text value that should be used for the calculation.
+> 															 If function: a callback which's return value is used as the text: `callback(element, options) : string`
 >
 
 
