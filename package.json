@@ -6,9 +6,9 @@
   "description": "UMD version of component/textarea-caret-position",
   "files": [
     "index.js",
-		"src/index.js"
+    "src/index.js"
   ],
-	"main": "index.js",
+  "main": "index.js",
   "license": "MIT",
   "keywords": [
     "textarea",
@@ -16,7 +16,7 @@
     "position"
   ],
   "scripts": {
-		"cp_lib_caret": "node -e require('fs').createReadStream('src/index.js').pipe(require('fs').createWriteStream('dist/caretPosition.js'))",
+    "cp_lib_caret": "node -e require('fs').createReadStream('src/index.js').pipe(require('fs').createWriteStream('dist/caretPosition.js'))",
     "lib_caret": "uglifyjs dist/caretPosition.js --compress --mangle -b \"beautify=false,preamble='var define;'\" --source-map \"filename='caretPosition.min.map',base='dist',url='caretPosition.min.map'\" -o dist/caretPosition.min.js",
     "rn_lib_caret": "node -e require('fs').renameSync('dist/caretPosition.min.js.map','dist/caretPosition.min.map')",
     "dist": "npm run cp_lib_caret & npm run lib_caret & npm run rn_lib_caret"
