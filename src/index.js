@@ -227,6 +227,10 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 
 	var isInput = element.nodeName === 'INPUT';//MODIFICATION: adjust lineHeight for INPUT
 
+	if(options && options.fontZoom === true){
+		options.fontZoom = measureFontZoom();
+	}
+
 	// transfer the element's properties to the div
 	properties.forEach(function (prop) {
 		if(isInput && prop === 'lineHeight'){
@@ -259,17 +263,7 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 				style[prop] = cc[prop];
 			}
 
-			//DISABLED TODO also try to calculate font-zoom for INPUT?
-//			if(options && options.fontZoom){//MODIFICATON: option for applying zoom-factor to line-height
-//				var fsize;
-//				if(isFinite((fsize = parseFloat(computed[prop])))){
-//					style[prop] = (fsize * options.fontZoom)+'px';
-//				} else {
-//					style[prop] = computed[prop];
-//				}
-//			}
-
-		} else if(options && options.fontZoom && (prop === 'fontSize' || prop === 'lineHeight')){//MODIFICATON: option for applying zoom-factor to font-size & line-height
+		} else if(options && typeof options.fontZoom === 'number' && (prop === 'fontSize' || prop === 'lineHeight')){//MODIFICATON: option for applying zoom-factor to font-size & line-height
 			var fsize;
 			if(isFinite((fsize = parseFloat(computed[prop])))){
 				style[prop] = (fsize * options.fontZoom)+'px';
@@ -307,9 +301,10 @@ function resetCaretCoordinatesDiv(options){
 function getText(element, options){
 	if(options){
 		if(options.text){
+			if(typeof options.text === 'function'){
+				return options.text(element, options);
+			}
 			return options.text;
-		} else if(options.container){
-			return options.container[options.fieldName];
 		}
 	}
 	return element.value;
@@ -365,18 +360,20 @@ function updateCaretCoordinates(element, position, div, options) {
  * 				options.reuse	BOOLEAN: reuse shadow DIV that is used for calculating the caret coordinates (DEFAULT: false)
  * 				options.id		STRING: the id attribute for the shadow DIV (DEFAULT: "input-textarea-caret-position-mirror-div")
  * 				options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.
- * 																If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it shoud get updated): callback(shadowDiv) : BOOLEAN
+ * 																If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it should get updated): callback(shadowDiv) : boolean
  * 																NOTE this option is only relevant, if "reuse" is TRUE.
  * 																(DEFAULT: false)
  * 				options.forceUpdateStyle	BOOLEAN: force updating the style of the shadow DIV; only relevant, if "reuse" is TRUE (DEFAULT: false)
  * 				options.forceClearFauxStyle	BOOLEAN: force faux span to use "cleared" style (e.g. in case SPAN is globally styled) (DEFAULT: false)
  * 				options.fauxId				STRING: use ID for faux span (e.g. for styling faux span) (DEFAULT: undefined)
- * 				options.fontZoom			NUMBER: apply zoom factor to font-size (DEFAULT: undefined)
+ * 				options.fontZoom			NUMBER | BOOLEAN: apply zoom factor to font-size.
+ * 															 If <code>true</code> (boolean) the zoom factor will be calculated using measureFontZoom(), and the option-value
+ * 															 (<code>true</code>) will be replaced with the measured zoom factor.
+ * 															 (DEFAULT: undefined)
  *
  *
- * 				options.text: STRING  the text value that should be used for the calculation (NOTE: this field takes precedence over container & fieldName)
- * 				options.container: OBJECT  if container is given, the current text will be retrieved from container[fieldName], instead of using element.value
- * 				options.fieldName: STRING  the field-name in container, to use as the text value (NOTE: container must also be specified)
+ * 				options.text STRING | FUNCTION: the text value that should be used for the calculation.
+ * 															 If function: a callback which's return value is used as the text: <code>callback(element, options) : string</code>
  *
  */
 function getCaretCoordinates(element, position, options) {
