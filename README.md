@@ -111,6 +111,8 @@ document.querySelector('textarea').addEventListener('input', function () {
 > 															 (`true`) will be replaced with the measured zoom factor.
 > 															 (DEFAULT: undefined)
 >
+> 		- options.additionalStyles	ARRAY<STRING>: transfers additional styles properties from the target element to the shadow DIV
+>
 > 		- options.text STRING | FUNCTION: the text value that should be used for the calculation.
 > 															 If function: a callback which's return value is used as the text: `callback(element, options) : string`
 >

@@ -232,7 +232,8 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	}
 
 	// transfer the element's properties to the div
-	properties.forEach(function (prop) {
+	var propList = options && options.additionalStyles? properties.concat(options.additionalStyles) : properties;
+	propList.forEach(function (prop) {
 		if(isInput && prop === 'lineHeight'){
 
 			//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
@@ -376,6 +377,8 @@ function updateCaretCoordinates(element, position, div, options) {
  * 															 If <code>true</code> (boolean) the zoom factor will be calculated using measureFontZoom(), and the option-value
  * 															 (<code>true</code>) will be replaced with the measured zoom factor.
  * 															 (DEFAULT: undefined)
+ *
+ * 				options.additionalStyles	ARRAY<STRING>: transfers additional styles properties from the target element to the shadow DIV
  *
  *
  * 				options.text STRING | FUNCTION: the text value that should be used for the calculation.
