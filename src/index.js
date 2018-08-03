@@ -263,7 +263,7 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 				style[prop] = cc[prop];
 			}
 
-		} else if(options && typeof options.fontZoom === 'number' && (prop === 'fontSize' || prop === 'lineHeight')){//MODIFICATON: option for applying zoom-factor to font-size & line-height
+		} else if(options && typeof options.fontZoom === 'number' && (prop === 'fontSize' || prop === 'lineHeight')){//MODIFICATION: option for applying zoom-factor to font-size & line-height
 			var fsize;
 			if(isFinite((fsize = parseFloat(computed[prop])))){
 				style[prop] = (fsize * options.fontZoom)+'px';
@@ -347,6 +347,10 @@ function updateCaretCoordinates(element, position, div, options) {
 			left: span.offsetLeft + parseInt(computed['borderLeftWidth'])
 	};
 
+	if(options && options.returnHeight){
+		coordinates.height = span.offsetHeight;
+	}
+
 	return coordinates;
 }
 
@@ -358,6 +362,8 @@ function updateCaretCoordinates(element, position, div, options) {
  * @param {PlainObject} [options] OPTIONAL
  * 				options for calculating the caret coordinates:
  * 				options.reuse	BOOLEAN: reuse shadow DIV that is used for calculating the caret coordinates (DEFAULT: false)
+ * 				options.returnDiv	BOOLEAN: if reuse was enabled, returns the shadow DIV in the coordinates-object in property <code>_div</code> (DEFAULT: false)
+ * 				options.returnHeight	BOOLEAN: returns the caret height in the returned coordinates-object in property <code>height</code> (DEFAULT: false)
  * 				options.id		STRING: the id attribute for the shadow DIV (DEFAULT: "input-textarea-caret-position-mirror-div")
  * 				options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.
  * 																If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it should get updated): callback(shadowDiv) : boolean
