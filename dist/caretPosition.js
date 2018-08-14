@@ -219,6 +219,8 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	style.whiteSpace = 'pre-wrap';
 	if (element.nodeName !== 'INPUT')
 		style.wordWrap = 'break-word';  // only for textarea-s
+	else if(!options || !options.allowInputWrap)
+		style.wordWrap = 'normal';     // explicitly reset wordWrap to avoid interference from inheriting style etc
 
 	// position off-screen
 	style.position = 'absolute';  // required to return coordinates properly
@@ -317,7 +319,7 @@ function updateCaretCoordinates(element, position, div, options) {
 
 	div.textContent = getText(element, options).substring(0, position);
 	// the second special handling for input type="text" vs textarea: spaces need to be replaced with non-breaking spaces - http://stackoverflow.com/a/13402035/1269037
-	if (element.nodeName === 'INPUT')
+	if (element.nodeName === 'INPUT' && (!options || !options.allowInputWrap))
 		div.textContent = div.textContent.replace(/\s/g, '\u00a0');
 
 	var span = document.createElement('span');
@@ -378,6 +380,7 @@ function updateCaretCoordinates(element, position, div, options) {
  * 															 (<code>true</code>) will be replaced with the measured zoom factor.
  * 															 (DEFAULT: undefined)
  *
+ * 				options.allowInputWrap	BOOLEAN: if TRUE, allows text-wrapping for INPUT elements (note: the W3C specifically states that text in INPUT will not be wrapped, even if styles would "request" it, like "word-wrap: break-word" or "word-break: break-all | break-word" or similar)
  * 				options.additionalStyles	ARRAY<STRING>: transfers additional styles properties from the target element to the shadow DIV
  *
  *
