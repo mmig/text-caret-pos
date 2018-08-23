@@ -315,6 +315,21 @@ function getText(element, options){
 
 function updateCaretCoordinates(element, position, div, options) {
 
+	if(element.scrollLeft)
+		div.scrollLeft = element.scrollLeft;
+
+	if(element.scrollTop)
+		div.scrollTop = element.scrollTop;
+
+	if(element.dir)
+		div.dir = element.dir;
+
+	if(options && options.additionalAttributes){
+		options.additionalAttributes.forEach(function (attr) {
+			div[attr] = element[attr];
+		});
+	}
+
 	var computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
 
 	div.textContent = getText(element, options).substring(0, position);
@@ -381,7 +396,9 @@ function updateCaretCoordinates(element, position, div, options) {
  * 															 (DEFAULT: undefined)
  *
  * 				options.allowInputWrap	BOOLEAN: if TRUE, allows text-wrapping for INPUT elements (note: the W3C specifically states that text in INPUT will not be wrapped, even if styles would "request" it, like "word-wrap: break-word" or "word-break: break-all | break-word" or similar)
+ * 																(DEFAULT: false)
  * 				options.additionalStyles	ARRAY<STRING>: transfers additional styles properties from the target element to the shadow DIV
+ * 				options.additionalAttributes	ARRAY<STRING>: transfers additional (node) attributes from the target element to the shadow DIV
  *
  *
  * 				options.text STRING | FUNCTION: the text value that should be used for the calculation.

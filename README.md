@@ -111,8 +111,10 @@ document.querySelector('textarea').addEventListener('input', function () {
 > 															 (`true`) will be replaced with the measured zoom factor.
 > 															 (DEFAULT: undefined)
 >
-> 		- options.allowInputWrap	BOOLEAN: if TRUE, allows text-wrapping for INPUT elements (note: the W3C specifically states that text in INPUT will not be wrapped, even if styles would "request" it, like "word-wrap: break-word" or "word-break: break-all | break-word" or similar)
+> 		- options.allowInputWrap	BOOLEAN: if TRUE, allows text-wrapping for INPUT elements (note: the W3C specifically states that text in INPUT will not be wrapped, even if styles would "request" it, like "word-wrap: break-word" or "word-break: break-all | break-word" or similar)  
+> 															(DEFAULT: false)
 > 		- options.additionalStyles	ARRAY<STRING>: transfers additional styles properties from the target element to the shadow DIV
+> 		- options.additionalAttributes	ARRAY<STRING>: transfers additional (node) attributes from the target element to the shadow DIV
 >
 > 		- options.text STRING | FUNCTION: the text value that should be used for the calculation.
 > 															 If function: a callback which's return value is used as the text: `callback(element, options) : string`
