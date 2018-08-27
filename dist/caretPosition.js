@@ -230,7 +230,7 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	var isInput = element.nodeName === 'INPUT';//MODIFICATION: adjust lineHeight for INPUT
 
 	if(options && options.fontZoom === true){
-		options.fontZoom = measureFontZoom();
+		options.fontZoom = 1 / measureFontZoom();
 	}
 
 	// transfer the element's properties to the div
