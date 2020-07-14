@@ -127,7 +127,7 @@ var lastStyleTargetType;
 
 function createCaretCoordinatesDiv(options) {
 
-	id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
+	var id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
 	var debug = options && options.debug || false;
 	var reuse = debug || (options && options.reuse) || false;
 	var div;
@@ -294,7 +294,7 @@ function resetStyleCaretCoordinatesDiv() {
 
 // HELPER: remove reused faux DIV if present
 function resetCaretCoordinatesDiv(options){
-	id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
+	var id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
 	var div = document.getElementById(id);
 	if(div){
 		document.body.removeChild(div);
