@@ -1,25 +1,32 @@
 {
-  "name": "textarea-caret",
-  "repository": "component/textarea-caret-position",
-  "version": "3.0.2",
-  "author": "Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)",
-  "description": "UMD version of component/textarea-caret-position",
+  "name": "text-caret-pos",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmig/text-caret.git"
+  },
+  "version": "1.0.0",
+  "authors": "russa (@russaa), Dan Dascalescu (@dandv), Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)",
+  "description": "UMD module for getting (x, y) coordinates of the caret in a textarea or input type='text'",
   "files": [
     "index.js",
-    "src/index.js"
+    "src/index.js",
+    "dist/textCaretPos.js",
+    "dist/textCaretPos.min.js",
+    "dist/textCaretPos.min.map"
   ],
   "main": "index.js",
   "license": "MIT",
   "keywords": [
     "textarea",
+    "input",
     "caret",
     "position"
   ],
   "scripts": {
-    "cp_lib_caret": "node -e require('fs').createReadStream('src/index.js').pipe(require('fs').createWriteStream('dist/caretPosition.js'))",
-    "lib_caret": "uglifyjs dist/caretPosition.js --compress --mangle -b \"beautify=false\" --source-map \"filename='caretPosition.min.map',base='dist',url='caretPosition.min.map'\" -o dist/caretPosition.min.js",
-    "rn_lib_caret": "node -e require('fs').renameSync('dist/caretPosition.min.js.map','dist/caretPosition.min.map')",
-    "dist": "npm run cp_lib_caret & npm run lib_caret & npm run rn_lib_caret"
+    "build:copy": "node -e require('fs').createReadStream('src/index.js').pipe(require('fs').createWriteStream('dist/textCaretPos.js'))",
+    "build:min": "uglifyjs dist/textCaretPos.js --compress --mangle -b \"beautify=false\" --source-map \"filename='textCaretPos.min.map',base='dist',url='textCaretPos.min.map'\" -o dist/textCaretPos.min.js",
+    "build:map": "node -e require('fs').renameSync('dist/textCaretPos.min.js.map','dist/textCaretPos.min.map')",
+    "build": "npm run build:copy & npm run build:min && npm run build:map"
   },
   "devDependencies": {
     "uglify-js": "^3.1.6"

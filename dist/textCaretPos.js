@@ -18,18 +18,18 @@
 		if (typeof define === 'function' && define.amd) {
 				// AMD. Register as an anonymous module.
 				define(function () {
-						return factory();
+						return factory(root);
 				});
 		} else if (typeof module === 'object' && module.exports) {
 				// Node. Does not work with strict CommonJS, but
 				// only CommonJS-like environments that support module.exports,
 				// like Node.
-				module.exports = factory();
+				module.exports = factory(root);
 		} else {
 				// Browser globals
-				root.caretPosition = factory();
+				root.textCaretPos = factory(root);
 		}
-}(typeof self !== 'undefined' ? self : this, function () {
+}(typeof window !== 'undefined'? window : typeof self !== 'undefined' ? self : this, function (global) {
 
 //	The properties that we copy into a mirrored div.
 //	Note that some browsers, such as Firefox,
@@ -121,13 +121,17 @@ var spanProperties = [
 ];
 
 var isBrowser = (typeof window !== 'undefined');
-var isFirefox = (isBrowser && window.mozInnerScreenX != null);
+var isFirefox = (isBrowser && global.mozInnerScreenX != null);
+
+var _getComputedStyle = global.getComputedStyle? global.getComputedStyle : function(element){  // currentStyle for IE < 9
+	return element.currentStyle;
+}
 
 var lastStyleTargetType;
 
 function createCaretCoordinatesDiv(options) {
 
-	id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
+	var id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
 	var debug = options && options.debug || false;
 	var reuse = debug || (options && options.reuse) || false;
 	var div;
@@ -169,7 +173,7 @@ function measureFontZoom() {
 
 	document.body.appendChild(span);
 
-	var measured = parseFloat(getComputedStyle(span).getPropertyValue('font-size'));
+	var measured = parseFloat(_getComputedStyle(span).getPropertyValue('font-size'));
 	if (span.parentNode !== null){//<- just to be save, but the span should have been attached to body
 		span.parentNode.removeChild(span);
 	}
@@ -213,11 +217,13 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 
 
 	var style = div.style;
-	var computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+	var computed = _getComputedStyle(element);
+
+	var isInput = element.nodeName === 'INPUT';//MODIFICATION: adjust lineHeight for INPUT
 
 	// default textarea styles
 	style.whiteSpace = 'pre-wrap';
-	if (element.nodeName !== 'INPUT')
+	if (!isInput)
 		style.wordWrap = 'break-word';  // only for textarea-s
 	else if(!options || !options.allowInputWrap)
 		style.wordWrap = 'normal';     // explicitly reset wordWrap to avoid interference from inheriting style etc
@@ -227,7 +233,6 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	if (!debug)
 		style.visibility = 'hidden';  // not 'display: none' because we want rendering
 
-	var isInput = element.nodeName === 'INPUT';//MODIFICATION: adjust lineHeight for INPUT
 
 	if(options && options.fontZoom === true){
 		options.fontZoom = 1 / measureFontZoom();
@@ -238,32 +243,53 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	propList.forEach(function (prop) {
 		if(isInput && prop === 'lineHeight'){
 
-			//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
-			//MODIFICATION: if "normal" lineHeight, force value:
-			var cc = computed;
-			if(computed['lineHeight'] === 'normal'){
-				style['lineHeight'] = '1em';
-				style['height'] = computed['height'];
-				cc = window.getComputedStyle? getComputedStyle(div) : div.currentStyle;	// currentStyle for IE < 9
-			}
-			//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
-
-			var ch, clh, th, oh = 0;
-			if(isFinite((clh = parseFloat(cc['lineHeight']))) && isFinite((ch = parseFloat(computed['height'])))){
-				['borderTop', 'borderBottom', 'paddingTop', 'paddingBottom', 'marginTop', 'marginBottom'].forEach(function(n){//TODO consider boxSizing?
-					th = parseFloat(computed[n]);
-					if(isFinite(th)){
-						oh+=th;
-					}
-				})
-				// if(ch > clh){
-					if(oh === 0) style['lineHeight'] = computed['height'];
-					else style['lineHeight'] = (ch - oh)+'px';
-				// } else {
-				// 	style['lineHeight'] = (ch - (clh-ch))+'px';
-				// }
+			if (computed.boxSizing === "border-box") {
+				var height = parseInt(computed.height);
+				var outerHeight =
+					parseInt(computed.paddingTop) +
+					parseInt(computed.paddingBottom) +
+					parseInt(computed.borderTopWidth) +
+					parseInt(computed.borderBottomWidth);
+				var targetHeight = outerHeight + parseInt(computed.lineHeight);
+				if (height > targetHeight) {
+					style.lineHeight = height - outerHeight + "px";
+				} else if (height === targetHeight) {
+					style.lineHeight = computed.lineHeight;
+				} else {
+					style.lineHeight = 0;
+				}
 			} else {
-				style[prop] = cc[prop];
+
+				//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
+				//MODIFICATION: if "normal" lineHeight, force value:
+				var cc = computed;
+				if(computed['lineHeight'] === 'normal'){
+					style['lineHeight'] = '1em';
+					style['height'] = computed['height'];
+					cc = _getComputedStyle(div);
+				}
+				//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
+
+				var ch, clh, th, oh = 0;
+				if(isFinite((clh = parseFloat(cc['lineHeight']))) && isFinite((ch = parseFloat(computed['height'])))){
+					['borderTop', 'borderBottom', 'paddingTop', 'paddingBottom', 'marginTop', 'marginBottom'].forEach(function(n){//TODO consider boxSizing?
+						th = parseFloat(computed[n]);
+						if(isFinite(th)){
+							oh+=th;
+						}
+					})
+					// if(ch > clh){
+						if(oh === 0) style['lineHeight'] = computed['height'];
+						else {
+							th = Math.max(ch - oh, 0);
+							style['lineHeight'] = (th > 0? th : ch)+'px';
+						}
+					// } else {
+					// 	style['lineHeight'] = (ch - (clh-ch))+'px';
+					// }
+				} else {
+					style[prop] = cc[prop];
+				}
 			}
 
 		} else if(options && typeof options.fontZoom === 'number' && (prop === 'fontSize' || prop === 'lineHeight')){//MODIFICATION: option for applying zoom-factor to font-size & line-height
@@ -294,7 +320,7 @@ function resetStyleCaretCoordinatesDiv() {
 
 // HELPER: remove reused faux DIV if present
 function resetCaretCoordinatesDiv(options){
-	id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
+	var id = (options && options.id) || 'input-textarea-caret-position-mirror-div';
 	var div = document.getElementById(id);
 	if(div){
 		document.body.removeChild(div);
@@ -330,11 +356,12 @@ function updateCaretCoordinates(element, position, div, options) {
 		});
 	}
 
-	var computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+	var computed = _getComputedStyle(element);
+	var isInput = element.nodeName === 'INPUT';
 
 	div.textContent = getText(element, options).substring(0, position);
 	// the second special handling for input type="text" vs textarea: spaces need to be replaced with non-breaking spaces - http://stackoverflow.com/a/13402035/1269037
-	if (element.nodeName === 'INPUT' && (!options || !options.allowInputWrap))
+	if (isInput && (!options || !options.allowInputWrap))
 		div.textContent = div.textContent.replace(/\s/g, '\u00a0');
 
 	var span = document.createElement('span');
@@ -362,7 +389,8 @@ function updateCaretCoordinates(element, position, div, options) {
 
 	var coordinates = {
 			top: span.offsetTop + parseInt(computed['borderTopWidth']),
-			left: span.offsetLeft + parseInt(computed['borderLeftWidth'])
+			left: span.offsetLeft + parseInt(computed['borderLeftWidth']),
+			height: parseInt(computed['lineHeight'])
 	};
 
 	if(options && options.returnHeight){

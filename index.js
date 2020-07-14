@@ -1,4 +1,4 @@
 
-var caretPosition = require('./src/index.js');
+var textCaretPos = require('./src/index.js');
 
-module.exports = caretPosition;
+module.exports = textCaretPos;

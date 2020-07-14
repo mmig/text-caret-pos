@@ -27,7 +27,7 @@
 				module.exports = factory(root);
 		} else {
 				// Browser globals
-				root.caretPosition = factory(root);
+				root.textCaretPos = factory(root);
 		}
 }(typeof window !== 'undefined'? window : typeof self !== 'undefined' ? self : this, function (global) {
 

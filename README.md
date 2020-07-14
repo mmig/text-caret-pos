@@ -1,4 +1,4 @@
-# Textarea Caret Position
+# Text Caret Position
 
 Get the `top` and `left` coordinates of the caret in a `<textarea>` or
 `<input type="text">`, in pixels. Useful for textarea autocompletes like
@@ -14,13 +14,13 @@ faithfully reproduce the wrapping in the faux `div`. The same is done for the
 
 **NOTE**: This fork of [textarea-caret-position](http://rawgit.com/component/textarea-caret-position/)
           wraps the functionality in an module (UMD) which exposes some
-					more (helper) functions and adds some options (see API description below).
+          more (helper) functions and adds some options (see API description below).
 
 
 ## Demo
 
 Check out the ~~[JSFiddle](http://jsfiddle.net/dandv/aFPA7/)~~ _(original library)_
-or the [test.html](http://rawgit.com/mmig/textarea-caret-position/master/test/index.html).
+or the [test.html](http://rawgit.com/mmig/text-caret-pos/master/test/index.html).
 
 ## Features
 
@@ -44,11 +44,11 @@ Usage Example:
 ```js
 //loading module with require:
 //NOTE if no require function is available, the module will be exported
-//     to global variable caretPosition
-var caretPosition = require('textarea-caret');
+//     to global variable textCaretPos
+var textCaretPos = require('textarea-caret');
 
 document.querySelector('textarea').addEventListener('input', function () {
-  var coordinates = caretPosition.getCoordinates(this, this.selectionEnd);
+  var coordinates = textCaretPos.getCoordinates(this, this.selectionEnd);
   console.log(coordinates.top);
   console.log(coordinates.left);
   console.log(coordinates.height);
