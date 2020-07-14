@@ -48,6 +48,7 @@ document.querySelector('textarea').addEventListener('input', function () {
   var coordinates = caretPosition.getCoordinates(this, this.selectionEnd);
   console.log(coordinates.top);
   console.log(coordinates.left);
+  console.log(coordinates.height);
 })
 ```
 
@@ -125,11 +126,11 @@ document.querySelector('textarea').addEventListener('input', function () {
 
 `position` is an integer indicating the location of the caret. You basically pass `this.selectionStart` or `this.selectionEnd`. This way, this library isn't opinionated about what the caret is.
 
-`coordinates` is an object of the form `{top: , left: }`.
+`coordinates` is an object of the form `{top: , left: , height: }`.
 
 ## Known issues
 
-* Tab characters in `<textarea>`s aren't supported in IE9 (issue #14)
+* Tab characters in `<textarea>`s aren't supported in IE9 ([issue #14](https://github.com/component/textarea-caret-position/issues/14))
 
 ## Dependencies
 
@@ -138,12 +139,12 @@ None.
 ## TODO
 
 * Add tests.
-* Consider adding [IE-specific](http://geekswithblogs.net/svanvliet/archive/2005/03/24/textarea-cursor-position-with-javascript.aspx) [code](http://stackoverflow.com/questions/16212871/get-the-offset-position-of-the-caret-in-a-textarea-in-pixels) if it avoids the necessity of creating the mirror div and might fix #14.
-* Test IE8 support with `currentStyle`.
+* Consider adding [IE-specific](http://geekswithblogs.net/svanvliet/archive/2005/03/24/textarea-cursor-position-with-javascript.aspx) [code](http://stackoverflow.com/questions/16212871/get-the-offset-position-of-the-caret-in-a-textarea-in-pixels) if it avoids the necessity of creating the mirror div and might fix [#14](https://github.com/component/textarea-caret-position/issues/14).
+* ~~Test IE8 support with `currentStyle`~~.
 
 ## Implementation notes
 
-For the same textarea of 25 rows and 40 columns, Chrome 33, Firefox 27 and IE9 return completely different values
+For the same textarea of 25 rows and 40 columns, Chrome 33, Firefox 27 and IE9 returned completely different values
 for `computed.width`, `textarea.offsetWidth`, and `textarea.clientWidth`. Here, `computed` is `getComputedStyle(textarea)`:
 
 Chrome 33

@@ -219,9 +219,11 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	var style = div.style;
 	var computed = _getComputedStyle(element);
 
+	var isInput = element.nodeName === 'INPUT';//MODIFICATION: adjust lineHeight for INPUT
+
 	// default textarea styles
 	style.whiteSpace = 'pre-wrap';
-	if (element.nodeName !== 'INPUT')
+	if (!isInput)
 		style.wordWrap = 'break-word';  // only for textarea-s
 	else if(!options || !options.allowInputWrap)
 		style.wordWrap = 'normal';     // explicitly reset wordWrap to avoid interference from inheriting style etc
@@ -231,7 +233,6 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	if (!debug)
 		style.visibility = 'hidden';  // not 'display: none' because we want rendering
 
-	var isInput = element.nodeName === 'INPUT';//MODIFICATION: adjust lineHeight for INPUT
 
 	if(options && options.fontZoom === true){
 		options.fontZoom = 1 / measureFontZoom();
@@ -335,10 +336,11 @@ function updateCaretCoordinates(element, position, div, options) {
 	}
 
 	var computed = _getComputedStyle(element);
+	var isInput = element.nodeName === 'INPUT';
 
 	div.textContent = getText(element, options).substring(0, position);
 	// the second special handling for input type="text" vs textarea: spaces need to be replaced with non-breaking spaces - http://stackoverflow.com/a/13402035/1269037
-	if (element.nodeName === 'INPUT' && (!options || !options.allowInputWrap))
+	if (isInput && (!options || !options.allowInputWrap))
 		div.textContent = div.textContent.replace(/\s/g, '\u00a0');
 
 	var span = document.createElement('span');
@@ -366,7 +368,8 @@ function updateCaretCoordinates(element, position, div, options) {
 
 	var coordinates = {
 			top: span.offsetTop + parseInt(computed['borderTopWidth']),
-			left: span.offsetLeft + parseInt(computed['borderLeftWidth'])
+			left: span.offsetLeft + parseInt(computed['borderLeftWidth']),
+			height: parseInt(computed['lineHeight'])
 	};
 
 	if(options && options.returnHeight){
