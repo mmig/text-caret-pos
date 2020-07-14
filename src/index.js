@@ -243,32 +243,50 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	propList.forEach(function (prop) {
 		if(isInput && prop === 'lineHeight'){
 
-			//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
-			//MODIFICATION: if "normal" lineHeight, force value:
-			var cc = computed;
-			if(computed['lineHeight'] === 'normal'){
-				style['lineHeight'] = '1em';
-				style['height'] = computed['height'];
-				cc = _getComputedStyle(div);
-			}
-			//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
-
-			var ch, clh, th, oh = 0;
-			if(isFinite((clh = parseFloat(cc['lineHeight']))) && isFinite((ch = parseFloat(computed['height'])))){
-				['borderTop', 'borderBottom', 'paddingTop', 'paddingBottom', 'marginTop', 'marginBottom'].forEach(function(n){//TODO consider boxSizing?
-					th = parseFloat(computed[n]);
-					if(isFinite(th)){
-						oh+=th;
-					}
-				})
-				// if(ch > clh){
-					if(oh === 0) style['lineHeight'] = computed['height'];
-					else style['lineHeight'] = (ch - oh)+'px';
-				// } else {
-				// 	style['lineHeight'] = (ch - (clh-ch))+'px';
-				// }
+			if (computed.boxSizing === "border-box") {
+				var height = parseInt(computed.height);
+				var outerHeight =
+					parseInt(computed.paddingTop) +
+					parseInt(computed.paddingBottom) +
+					parseInt(computed.borderTopWidth) +
+					parseInt(computed.borderBottomWidth);
+				var targetHeight = outerHeight + parseInt(computed.lineHeight);
+				if (height > targetHeight) {
+					style.lineHeight = height - outerHeight + "px";
+				} else if (height === targetHeight) {
+					style.lineHeight = computed.lineHeight;
+				} else {
+					style.lineHeight = 0;
+				}
 			} else {
-				style[prop] = cc[prop];
+
+				//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
+				//MODIFICATION: if "normal" lineHeight, force value:
+				var cc = computed;
+				if(computed['lineHeight'] === 'normal'){
+					style['lineHeight'] = '1em';
+					style['height'] = computed['height'];
+					cc = _getComputedStyle(div);
+				}
+				//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
+
+				var ch, clh, th, oh = 0;
+				if(isFinite((clh = parseFloat(cc['lineHeight']))) && isFinite((ch = parseFloat(computed['height'])))){
+					['borderTop', 'borderBottom', 'paddingTop', 'paddingBottom', 'marginTop', 'marginBottom'].forEach(function(n){//TODO consider boxSizing?
+						th = parseFloat(computed[n]);
+						if(isFinite(th)){
+							oh+=th;
+						}
+					})
+					// if(ch > clh){
+						if(oh === 0) style['lineHeight'] = computed['height'];
+						else style['lineHeight'] = (ch - oh)+'px';
+					// } else {
+					// 	style['lineHeight'] = (ch - (clh-ch))+'px';
+					// }
+				} else {
+					style[prop] = cc[prop];
+				}
 			}
 
 		} else if(options && typeof options.fontZoom === 'number' && (prop === 'fontSize' || prop === 'lineHeight')){//MODIFICATION: option for applying zoom-factor to font-size & line-height
