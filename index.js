@@ -1,4 +1,4 @@
 
-var textCaretPos = require('./src/index.js');
+var textCaretPos = require('./dist/textCaretPos.js');
 
 module.exports = textCaretPos;
