@@ -22,7 +22,8 @@ declare interface CaretOptions {
    */
   returnDiv?: boolean;
   /**
-   * returns the caret height in the returned coordinates-object in property `height`
+   * returns the caret offset height instead of the computed `lineHeight` in the returned
+   * coordinates-object in property `height`
    *
    * (DEFAULT: false)
    */
@@ -99,7 +100,7 @@ declare interface CaretOptions {
 export interface CaretPosition {
   top: number;
   left: number;
-  height?: number;
+  height: number;
   _div?: HTMLElement;
 }
 
