@@ -280,7 +280,10 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 					})
 					// if(ch > clh){
 						if(oh === 0) style['lineHeight'] = computed['height'];
-						else style['lineHeight'] = (ch - oh)+'px';
+						else {
+							th = Math.max(ch - oh, 0);
+							style['lineHeight'] = (th > 0? th : ch)+'px';
+						}
 					// } else {
 					// 	style['lineHeight'] = (ch - (clh-ch))+'px';
 					// }
