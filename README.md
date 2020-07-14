@@ -107,24 +107,22 @@ document.querySelector('textarea').addEventListener('input', function () {
 > 		- options.returnDiv	BOOLEAN: if reuse was enabled, returns the shadow DIV in the coordinates-object in property `_div` (DEFAULT: false)
 > 		- options.returnHeight	BOOLEAN: returns the caret _offset_ height (instead of computed `lineHeight`) in the returned coordinates-object in property `height` (DEFAULT: false)
 > 		- options.id		STRING: the id attribute for the shadow DIV (DEFAULT: "input-textarea-caret-position-mirror-div")
-> 		- options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.
-> 															If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it should get updated): `callback(shadowDiv) : boolean`
+> 		- options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.  
+> 															If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it should get updated): `callback(shadowDiv) : boolean`  
 > 															NOTE this option is only relevant, if "reuse" is TRUE.  
 > 															(DEFAULT: false)
 > 		- options.forceUpdateStyle	BOOLEAN: force updating the style of the shadow DIV; only relevant, if "reuse" is TRUE (DEFAULT: false)
 > 		- options.forceClearFauxStyle	BOOLEAN: force faux span to use "cleared" style (e.g. in case SPAN is globally styled) (DEFAULT: false)
 > 		- options.fauxId				STRING: use ID for faux span (e.g. for styling faux span) (DEFAULT: undefined)
-> 		- options.fontZoom			NUMBER | BOOLEAN: apply zoom factor to font-size.
+> 		- options.fontZoom			NUMBER | BOOLEAN: apply zoom factor to font-size.  
 > 															 If `true` (boolean) the zoom factor will be calculated using `measureFontZoom()`, and the option-value
-> 															 (`true`) will be replaced with the measured zoom factor.
+> 															 (`true`) will be replaced with the measured zoom factor.  
 > 															 (DEFAULT: undefined)
->
 > 		- options.allowInputWrap	BOOLEAN: if TRUE, allows text-wrapping for INPUT elements (note: the W3C specifically states that text in INPUT will not be wrapped, even if styles would "request" it, like "word-wrap: break-word" or "word-break: break-all | break-word" or similar)  
 > 															(DEFAULT: false)
 > 		- options.additionalStyles	ARRAY<STRING>: transfers additional styles properties from the target element to the shadow DIV
-> 		- options.additionalAttributes	ARRAY<STRING>: transfers additional (node) attributes from the target element to the shadow DIV
->
-> 		- options.text STRING | FUNCTION: the text value that should be used for the calculation.
+> 		- options.additionalAttributes	ARRAY<STRING>: transfers additional (node) attributes from the target element to the shadow DIV  
+> 		- options.text STRING | FUNCTION: the text value that should be used for the calculation.  
 > 															 If function: a callback which's return value is used as the text: `callback(element, options) : string`
 >
 
