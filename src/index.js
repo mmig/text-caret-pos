@@ -18,18 +18,18 @@
 		if (typeof define === 'function' && define.amd) {
 				// AMD. Register as an anonymous module.
 				define(function () {
-						return factory();
+						return factory(root);
 				});
 		} else if (typeof module === 'object' && module.exports) {
 				// Node. Does not work with strict CommonJS, but
 				// only CommonJS-like environments that support module.exports,
 				// like Node.
-				module.exports = factory();
+				module.exports = factory(root);
 		} else {
 				// Browser globals
-				root.caretPosition = factory();
+				root.caretPosition = factory(root);
 		}
-}(typeof self !== 'undefined' ? self : this, function () {
+}(typeof window !== 'undefined'? window : typeof self !== 'undefined' ? self : this, function (global) {
 
 //	The properties that we copy into a mirrored div.
 //	Note that some browsers, such as Firefox,
@@ -121,7 +121,11 @@ var spanProperties = [
 ];
 
 var isBrowser = (typeof window !== 'undefined');
-var isFirefox = (isBrowser && window.mozInnerScreenX != null);
+var isFirefox = (isBrowser && global.mozInnerScreenX != null);
+
+var _getComputedStyle = global.getComputedStyle? global.getComputedStyle : function(element){  // currentStyle for IE < 9
+	return element.currentStyle;
+}
 
 var lastStyleTargetType;
 
@@ -169,7 +173,7 @@ function measureFontZoom() {
 
 	document.body.appendChild(span);
 
-	var measured = parseFloat(getComputedStyle(span).getPropertyValue('font-size'));
+	var measured = parseFloat(_getComputedStyle(span).getPropertyValue('font-size'));
 	if (span.parentNode !== null){//<- just to be save, but the span should have been attached to body
 		span.parentNode.removeChild(span);
 	}
@@ -213,7 +217,7 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 
 
 	var style = div.style;
-	var computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+	var computed = _getComputedStyle(element);
 
 	// default textarea styles
 	style.whiteSpace = 'pre-wrap';
@@ -244,7 +248,7 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 			if(computed['lineHeight'] === 'normal'){
 				style['lineHeight'] = '1em';
 				style['height'] = computed['height'];
-				cc = window.getComputedStyle? getComputedStyle(div) : div.currentStyle;	// currentStyle for IE < 9
+				cc = _getComputedStyle(div);
 			}
 			//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
 
@@ -330,7 +334,7 @@ function updateCaretCoordinates(element, position, div, options) {
 		});
 	}
 
-	var computed = window.getComputedStyle? getComputedStyle(element) : element.currentStyle;  // currentStyle for IE < 9
+	var computed = _getComputedStyle(element);
 
 	div.textContent = getText(element, options).substring(0, position);
 	// the second special handling for input type="text" vs textarea: spaces need to be replaced with non-breaking spaces - http://stackoverflow.com/a/13402035/1269037
