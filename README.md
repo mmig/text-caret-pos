@@ -42,6 +42,9 @@ or the [test.html](http://rawgit.com/mmig/textarea-caret-position/master/test/in
 
 Usage Example:
 ```js
+//loading module with require:
+//NOTE if no require function is available, the module will be exported
+//     to global variable caretPosition
 var caretPosition = require('textarea-caret');
 
 document.querySelector('textarea').addEventListener('input', function () {
@@ -98,7 +101,7 @@ document.querySelector('textarea').addEventListener('input', function () {
 > 		- options.debug	BOOLEAN: show shadow DIV that is used for calculating the caret coordinates; this will also include the created DIV in the coordinates-object in property `_div` (DEFAULT: false)
 > 		- options.reuse	BOOLEAN: reuse shadow DIV that is used for calculating the caret coordinates (DEFAULT: false)
 > 		- options.returnDiv	BOOLEAN: if reuse was enabled, returns the shadow DIV in the coordinates-object in property `_div` (DEFAULT: false)
-> 		- options.returnHeight	BOOLEAN: returns the caret height in the returned coordinates-object in property `height` (DEFAULT: false)
+> 		- options.returnHeight	BOOLEAN: returns the caret _offset_ height (instead of computed `lineHeight`) in the returned coordinates-object in property `height` (DEFAULT: false)
 > 		- options.id		STRING: the id attribute for the shadow DIV (DEFAULT: "input-textarea-caret-position-mirror-div")
 > 		- options.guessIfUpdateStyle	BOOLEAN | FUNCTION: if TRUE, styling of the shadow DIV is not updated, if the current target element has the same type (Tag Name) as the previous one.
 > 															If function: a callback for determining, if the shadow DIV's style should be updated (return TRUE, if it should get updated): `callback(shadowDiv) : boolean`
