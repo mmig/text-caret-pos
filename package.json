@@ -9,6 +9,7 @@
   "description": "UMD module for getting (x, y) coordinates of the caret in a textarea or input type='text'",
   "files": [
     "index.js",
+    "index.d.ts",
     "src/index.js",
     "dist/textCaretPos.js",
     "dist/textCaretPos.min.js",
