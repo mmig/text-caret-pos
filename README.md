@@ -1,5 +1,9 @@
 # Text Caret Position
 
+[![MIT license](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![GitHub package.json version](https://img.shields.io/github/package-json/v/mmig/text-caret-pos/master)](https://github.com/mmig/text-caret-pos)
+[![npm](https://img.shields.io/npm/v/text-caret-pos)](https://www.npmjs.com/package/text-caret-pos)
+
 Get the `top` and `left` coordinates of the caret in a `<textarea>` or
 `<input type="text">`, in pixels. Useful for textarea autocompletes like
 GitHub or Twitter, or for single-line autocompletes like the name drop-down
