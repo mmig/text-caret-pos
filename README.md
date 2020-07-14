@@ -16,7 +16,7 @@ of the span is set to the remainder of the text in the textarea, in order to
 faithfully reproduce the wrapping in the faux `div`. The same is done for the
 `input` to simplify the code, though it makes no difference.
 
-**NOTE**: This fork of [textarea-caret-position](http://rawgit.com/component/textarea-caret-position/)
+**NOTE**: This fork of [textarea-caret-position](https://rawgit.com/component/textarea-caret-position/)
           wraps the functionality in an module (UMD) which exposes some
           more (helper) functions and adds some options (see API description below).
 
@@ -24,7 +24,7 @@ faithfully reproduce the wrapping in the faux `div`. The same is done for the
 ## Demo
 
 Check out the ~~[JSFiddle](http://jsfiddle.net/dandv/aFPA7/)~~ _(original library)_
-or the [test.html](http://rawgit.com/mmig/text-caret-pos/master/test/index.html).
+or the [test.html](https://mmig.github.io/text-caret-pos/).
 
 ## Features
 
