@@ -243,6 +243,16 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 	propList.forEach(function (prop) {
 		if(isInput && prop === 'lineHeight'){
 
+			//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
+			//MODIFICATION: if "normal" lineHeight, force value:
+			var cc = computed;
+			if(computed['lineHeight'] === 'normal'){
+				style['lineHeight'] = '1em';
+				style['height'] = computed['height'];
+				cc = _getComputedStyle(div);
+			}
+			//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
+
 			if (computed.boxSizing === "border-box") {
 				var height = parseInt(computed.height);
 				var outerHeight =
@@ -250,25 +260,15 @@ function styleCaretCoordinatesDiv(element, position, div, options) {
 					parseInt(computed.paddingBottom) +
 					parseInt(computed.borderTopWidth) +
 					parseInt(computed.borderBottomWidth);
-				var targetHeight = outerHeight + parseInt(computed.lineHeight);
+				var targetHeight = outerHeight + parseInt(cc.lineHeight);
 				if (height > targetHeight) {
 					style.lineHeight = height - outerHeight + "px";
 				} else if (height === targetHeight) {
-					style.lineHeight = computed.lineHeight;
+					style.lineHeight = cc.lineHeight;
 				} else {
 					style.lineHeight = 0;
 				}
 			} else {
-
-				//MODIFICATION: for INPUT the text is rendered centered -> set lineHeight equal to computed height, if element is larger than the lineHeight
-				//MODIFICATION: if "normal" lineHeight, force value:
-				var cc = computed;
-				if(computed['lineHeight'] === 'normal'){
-					style['lineHeight'] = '1em';
-					style['height'] = computed['height'];
-					cc = _getComputedStyle(div);
-				}
-				//console.log('height: '+computed['height']+', lineHeight: '+cc['lineHeight']);
 
 				var ch, clh, th, oh = 0;
 				if(isFinite((clh = parseFloat(cc['lineHeight']))) && isFinite((ch = parseFloat(computed['height'])))){
