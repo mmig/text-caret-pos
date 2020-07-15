@@ -1,4 +1,9 @@
 
+1.0.1 / 2020-07-15
+==================
+
+ * BUGFIX need to use lineHeight='normal' fix also in case of boxSizing='border-box'
+
 
 1.0.0 / 2020-07-14 [text-caret]
 ==================
@@ -24,6 +29,7 @@ first version for renamed module `text-caret-pos`
    * apply BUGFIX "window. bug fix"
      https://github.com/component/textarea-caret-position/pull/33
      * extracted access to `window.getComputedStyle` to helper function
+
 
 3.0.0 / 2015-03-21 [text-caret-position]
 ==================
