@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/mmig/text-caret.git"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "authors": "russa (@russaa), Dan Dascalescu (@dandv), Jonathan Ong <me@jongleberry.com> (http://jongleberry.com)",
   "description": "UMD module for getting (x, y) coordinates of the caret in a textarea or input type='text'",
   "files": [
